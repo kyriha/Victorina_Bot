@@ -43,9 +43,12 @@ async def right_answer(callback: types.CallbackQuery):
         reply_markup=None
     )
 
-    await callback.message.answer("Верно!")
     current_question_index = await get_quiz_index(callback.from_user.id)
     current_score = await get_user_score(callback.from_user.id)
+    correct_option = quiz_data[current_question_index]['correct_option']
+
+    await callback.message.answer(f"Верно! Твой ответ: {quiz_data[current_question_index]['options'][correct_option]}")
+
     # Обновление номера текущего вопроса в базе данных
     current_question_index += 1
     # Обновление количества правильных ответов
@@ -180,7 +183,6 @@ async def cmd_stats(message: types.Message):
     user_id = message.from_user.id
     user_score = await get_user_score(user_id)
     await message.answer(f"Ваш результат: {user_score}")
-
 
 # Запуск процесса поллинга новых апдейтов
 async def main():
